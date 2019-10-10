@@ -1,11 +1,5 @@
 scrape_configs:
   - job_name: test_json
-    static_configs:
-    - targets:
-        - localhost
-      labels:
-            type:     test
-            __path__: /tmp/test-*.json
     pipeline_stages:
       - regex:
           expression: "^(?P<timestamp>(\\d+-\\d+-\\d+ \\d+:\\d+:\\d+)) (?P<message>.*)"

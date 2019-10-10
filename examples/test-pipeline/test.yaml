@@ -1,0 +1,14 @@
+job_name: test_json
+
+tests:
+    - input_logs:
+        - entry:     "2019-10-10 01:02:03 hello world"
+        - entry:     "hello world"
+          timestamp: "2019-10-10T00:00:00+02:00"
+      expected_logs:
+        - timestamp: "2019-10-10T01:02:03+02:00"
+          entry:     "hello world"
+          labels:    ~
+        - timestamp: "2019-10-10T00:00:00+02:00"
+          entry:     "hello world"
+          labels:    ~

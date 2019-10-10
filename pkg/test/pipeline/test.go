@@ -3,7 +3,6 @@ package pipeline
 import (
 	"fmt"
 	"path/filepath"
-	"time"
 
 	"github.com/grafana/loki/pkg/logentry/stages"
 	"github.com/pkg/errors"
@@ -63,9 +62,8 @@ func (s *TestSuite) runTestCase(reporter *Reporter, testID int, testConfig TestC
 	for _, inputLog := range testConfig.InputLogs {
 		labels := model.LabelSet{}
 		extracted := map[string]interface{}{}
-		// TODO: allow to mock it
-		timestamp := time.Now()
-		entry := inputLog
+		timestamp := inputLog.Time()
+		entry := inputLog.Entry
 
 		pipeline.Process(labels, extracted, &timestamp, &entry)
 

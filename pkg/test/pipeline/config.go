@@ -17,8 +17,13 @@ type TestSuiteConfig struct {
 }
 
 type TestConfig struct {
-	InputLogs    []string          `yaml:"input_logs"`
+	InputLogs    []TestInputLog    `yaml:"input_logs"`
 	ExpectedLogs []TestExpectedLog `yaml:"expected_logs"`
+}
+
+type TestInputLog struct {
+	Timestamp time.Time `yaml:"timestamp"`
+	Entry     string    `yaml:"entry"`
 }
 
 type TestExpectedLog struct {
@@ -73,4 +78,12 @@ func (l *TestExpectedLog) String(indent int) string {
 	}
 
 	return strings.Join(lines, "\n")
+}
+
+func (l *TestInputLog) Time() time.Time {
+	if l.Timestamp.After(time.Unix(0, 0)) {
+		return l.Timestamp
+	} else {
+		return time.Now()
+	}
 }
