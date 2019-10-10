@@ -3,15 +3,21 @@ package pipeline
 import (
 	"fmt"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 type Reporter struct {
-	results []Result
+	results      []Result
+	successColor *color.Color
+	failureColor *color.Color
 }
 
 func NewReporter() *Reporter {
 	return &Reporter{
-		results: []Result{},
+		results:      []Result{},
+		successColor: color.New(color.FgGreen),
+		failureColor: color.New(color.FgRed),
 	}
 }
 
@@ -71,16 +77,16 @@ func (r *Reporter) recordResult(result Result) {
 
 func (r *Reporter) printResult(result Result) {
 	if result.success {
-		fmt.Println(fmt.Sprintf("PASS (%s)", result.Header()))
+		r.successColor.Println(fmt.Sprintf("PASS (%s)", result.Header()))
 	} else if result.customErr != nil {
-		fmt.Println(fmt.Sprintf("FAIL (%s)", result.Header()))
-		fmt.Println("    " + result.customErr.Error())
+		r.failureColor.Println(fmt.Sprintf("FAIL (%s)", result.Header()))
+		r.failureColor.Println("    " + result.customErr.Error())
 	} else {
-		fmt.Println(fmt.Sprintf("FAIL (%s)", result.Header()))
-		fmt.Println("    Expected:")
-		fmt.Println(result.expectedLog.String(8))
-		fmt.Println("    Actual:  ")
-		fmt.Println(result.actualLog.String(8))
+		r.failureColor.Println(fmt.Sprintf("FAIL (%s)", result.Header()))
+		r.failureColor.Println("    Expected:")
+		r.failureColor.Println(result.expectedLog.String(8))
+		r.failureColor.Println("    Actual:  ")
+		r.failureColor.Println(result.actualLog.String(8))
 	}
 }
 
