@@ -2,10 +2,12 @@ scrape_configs:
   - job_name: test_json
     pipeline_stages:
       - regex:
-          expression: "^(?P<timestamp>(\\d+-\\d+-\\d+ \\d+:\\d+:\\d+)) (?P<message>.*)"
+          expression: "^(?P<timestamp>(\\d+-\\d+-\\d+ \\d+:\\d+:\\d+)) service=(?P<service>\\w+) (?P<message>.*)"
       - timestamp:
           source: timestamp
           format: "2006-01-02 15:04:05"
           location: "Europe/Rome"
       - output:
           source: message
+      - labels:
+          service: service
