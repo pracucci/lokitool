@@ -31,7 +31,7 @@ func (r *Reporter) Failed() bool {
 	return false
 }
 
-func (r *Reporter) RecordTestSuccess(suiteID string, testID, entryID int, expectedLog, actualLog *TestExpectedLog) {
+func (r *Reporter) RecordTestSuccess(suiteID string, testID, entryID int, expectedLog, actualLog *TestLog) {
 	r.recordResult(Result{
 		suiteID:     suiteID,
 		testID:      testID,
@@ -42,7 +42,7 @@ func (r *Reporter) RecordTestSuccess(suiteID string, testID, entryID int, expect
 	})
 }
 
-func (r *Reporter) RecordTestFailure(suiteID string, testID, entryID int, expectedLog, actualLog *TestExpectedLog) {
+func (r *Reporter) RecordTestFailure(suiteID string, testID, entryID int, expectedLog, actualLog *TestLog) {
 	r.recordResult(Result{
 		suiteID:     suiteID,
 		testID:      testID,
@@ -95,8 +95,8 @@ type Result struct {
 	testID      int
 	entryID     int
 	success     bool
-	expectedLog *TestExpectedLog
-	actualLog   *TestExpectedLog
+	expectedLog *TestLog
+	actualLog   *TestLog
 	customErr   error
 }
 

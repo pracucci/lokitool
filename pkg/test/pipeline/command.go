@@ -33,7 +33,7 @@ func RunUnitTestsCommand(configFile string, testFiles ...string) int {
 	}
 
 	// Load tests
-	testSuites, err := LoadTestSuites(testFiles)
+	testSuites, err := NewTestSuites(testFiles)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 	}
