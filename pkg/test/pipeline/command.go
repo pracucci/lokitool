@@ -17,7 +17,7 @@ const (
 	exitCodeConfigFailure = 2
 )
 
-func RunUnitTestsCommand(configFile string, testFiles ...string) int {
+func RunUnitTestsCommand(configFile string, testFiles []string, verbose bool) int {
 	var config config.Config
 
 	// Load Promtail config
@@ -56,11 +56,15 @@ func RunUnitTestsCommand(configFile string, testFiles ...string) int {
 	}
 
 	// Run tests
-	reporter := NewReporter()
+	reporter := NewReporter(verbose)
 
 	for _, testSuite := range testSuites {
 		testSuite.Run(reporter, pipelines)
 	}
+
+	// Print summary
+	fmt.Println("")
+	fmt.Println(reporter.Summary())
 
 	if reporter.Failed() {
 		return exitCodeTestsFailure

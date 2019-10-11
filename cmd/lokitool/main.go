@@ -14,7 +14,8 @@ func main() {
 
 	testCmd := app.Command("test", "Run unit tests.")
 	testPipelineCmd := testCmd.Command("pipeline", "Run unit tests for Promtail pipeline.")
-	testPipelineConfigFile := testPipelineCmd.Flag("config.file", "Promtail config file").Required().String()
+	testPipelineVerbose := testPipelineCmd.Flag("verbose", "Enable verbose output.").Bool()
+	testPipelineConfigFile := testPipelineCmd.Flag("config.file", "Promtail config file.").Required().String()
 	testPipelineFiles := testPipelineCmd.Arg(
 		"test-file",
 		"The unit test file.",
@@ -24,6 +25,6 @@ func main() {
 
 	switch parsedCmd {
 	case testPipelineCmd.FullCommand():
-		os.Exit(pipeline.RunUnitTestsCommand(*testPipelineConfigFile, *testPipelineFiles...))
+		os.Exit(pipeline.RunUnitTestsCommand(*testPipelineConfigFile, *testPipelineFiles, *testPipelineVerbose))
 	}
 }

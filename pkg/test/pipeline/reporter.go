@@ -7,17 +7,20 @@ import (
 	"github.com/fatih/color"
 )
 
+var (
+	successColor = color.New(color.FgGreen)
+	failureColor = color.New(color.FgRed)
+)
+
 type Reporter struct {
-	results      []Result
-	successColor *color.Color
-	failureColor *color.Color
+	results []Result
+	verbose bool
 }
 
-func NewReporter() *Reporter {
+func NewReporter(verbose bool) *Reporter {
 	return &Reporter{
-		results:      []Result{},
-		successColor: color.New(color.FgGreen),
-		failureColor: color.New(color.FgRed),
+		results: []Result{},
+		verbose: verbose,
 	}
 }
 
@@ -70,24 +73,43 @@ func (r *Reporter) RecordSuiteError(suiteID string, err error) {
 	})
 }
 
-func (r *Reporter) recordResult(result Result) {
-	r.results = append(r.results, result)
-	r.printResult(result)
+func (r *Reporter) Summary() string {
+	summary := []string{
+		"",
+		"========== SUMMARY ===========",
+		"",
+	}
+
+	// Print and count failures
+	failures := 0
+
+	for _, result := range r.results {
+		if result.success {
+			continue
+		}
+
+		// In non-verbose mode we need to print failures
+		if !r.verbose {
+			summary = append(summary, result.Report(true))
+		}
+
+		failures++
+	}
+
+	// Display the number of failures (if any)
+	if failures > 0 {
+		summary = append(summary, failureColor.Sprintf("Failed %d tests out of %d", failures, len(r.results)))
+	} else {
+		summary = append(summary, successColor.Sprintf("All %d tests have passed", len(r.results)))
+	}
+
+	return strings.Join(summary, "\n")
 }
 
-func (r *Reporter) printResult(result Result) {
-	if result.success {
-		r.successColor.Println(fmt.Sprintf("PASS (%s)", result.Header()))
-	} else if result.customErr != nil {
-		r.failureColor.Println(fmt.Sprintf("FAIL (%s)", result.Header()))
-		r.failureColor.Println("    " + result.customErr.Error())
-	} else {
-		r.failureColor.Println(fmt.Sprintf("FAIL (%s)", result.Header()))
-		r.failureColor.Println("    Expected:")
-		r.failureColor.Println(result.expectedLog.String(8))
-		r.failureColor.Println("    Actual:  ")
-		r.failureColor.Println(result.actualLog.String(8))
-	}
+func (r *Reporter) recordResult(result Result) {
+	r.results = append(r.results, result)
+
+	fmt.Print(result.Report(r.verbose))
 }
 
 type Result struct {
@@ -116,4 +138,45 @@ func (r *Result) Header() string {
 	}
 
 	return strings.Join(header, " ")
+}
+
+func (r *Result) Report(verbose bool) string {
+	if verbose {
+		return r.reportVerbose()
+	} else {
+		return r.reportMinimal()
+	}
+}
+
+func (r *Result) reportMinimal() string {
+	if r.success {
+		return successColor.Sprint(".")
+	} else {
+		return failureColor.Sprint("F")
+	}
+}
+
+func (r *Result) reportVerbose() string {
+	var report []string
+
+	if r.success {
+		report = []string{
+			successColor.Sprintf("PASS (%s)", r.Header()),
+		}
+	} else if r.customErr != nil {
+		report = []string{
+			failureColor.Sprintf("FAIL (%s)", r.Header()),
+			failureColor.Sprintf("    %s", r.customErr.Error()),
+		}
+	} else {
+		report = []string{
+			failureColor.Sprintf("FAIL (%s)", r.Header()),
+			failureColor.Sprint("    Expected:"),
+			failureColor.Sprint(r.expectedLog.String(8)),
+			failureColor.Sprint("    Actual:  "),
+			failureColor.Sprint(r.actualLog.String(8)),
+		}
+	}
+
+	return strings.Join(report, "\n") + "\n"
 }
