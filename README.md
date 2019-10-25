@@ -29,3 +29,13 @@ $ ./lokitool test pipeline --config.file=./examples/test-pipeline/promtail-confi
 
 All 2 tests have passed
 ```
+
+
+## Release
+
+Run `make release VERSION=0.1.2` and follow the instructions.
+
+
+## License
+
+Apache License 2.0, see [LICENSE](./LICENSE).
