@@ -41,9 +41,9 @@ func (c *TestCase) Run(suiteID string, testID int, pipeline *stages.Pipeline, re
 		entryID := i + 1
 
 		if actualLog.Equal(&c.ExpectedLogs[i]) {
-			reporter.RecordTestSuccess(suiteID, testID, entryID, &c.ExpectedLogs[i], &actualLog)
+			reporter.RecordTestSuccess(suiteID, testID, entryID, c.ExpectedLogs[i], actualLog)
 		} else {
-			reporter.RecordTestFailure(suiteID, testID, entryID, &c.ExpectedLogs[i], &actualLog)
+			reporter.RecordTestFailure(suiteID, testID, entryID, c.ExpectedLogs[i], actualLog)
 		}
 	}
 }

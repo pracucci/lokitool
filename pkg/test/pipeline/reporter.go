@@ -34,25 +34,25 @@ func (r *Reporter) Failed() bool {
 	return false
 }
 
-func (r *Reporter) RecordTestSuccess(suiteID string, testID, entryID int, expectedLog, actualLog *TestLog) {
+func (r *Reporter) RecordTestSuccess(suiteID string, testID, entryID int, expectedLog, actualLog TestLog) {
 	r.recordResult(Result{
 		suiteID:     suiteID,
 		testID:      testID,
 		entryID:     entryID,
 		success:     true,
-		expectedLog: expectedLog,
-		actualLog:   actualLog,
+		expectedLog: &expectedLog,
+		actualLog:   &actualLog,
 	})
 }
 
-func (r *Reporter) RecordTestFailure(suiteID string, testID, entryID int, expectedLog, actualLog *TestLog) {
+func (r *Reporter) RecordTestFailure(suiteID string, testID, entryID int, expectedLog, actualLog TestLog) {
 	r.recordResult(Result{
 		suiteID:     suiteID,
 		testID:      testID,
 		entryID:     entryID,
 		success:     false,
-		expectedLog: expectedLog,
-		actualLog:   actualLog,
+		expectedLog: &expectedLog,
+		actualLog:   &actualLog,
 	})
 }
 
