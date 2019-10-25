@@ -7,6 +7,7 @@ scrape_configs:
           source: timestamp
           format: "2006-01-02 15:04:05"
           location: "Europe/Rome"
+          action_on_failure: skip
       - output:
           source: message
       - labels:
