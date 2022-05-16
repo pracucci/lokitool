@@ -11,7 +11,7 @@ require (
 	github.com/prometheus/client_golang v1.1.0
 	github.com/prometheus/common v0.7.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/yaml.v2 v2.2.4
+	gopkg.in/yaml.v2 v2.2.8
 )
 
 replace github.com/weaveworks/common => github.com/sandlis/weaveworks-common v0.0.0-20190822064708-8fa0a1ca9d89
